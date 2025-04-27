@@ -17,7 +17,7 @@ const UpvotesList: React.FC<UpvotesListProps> = ({ initialCount, listKey }) => {
   useEffect(() => {
     if (!isInitialized.current) {
       console.log(`Creating new list for key ${listKey}`);
-      const uniqueId = createList(initialCount);
+      const uniqueId = createList(initialCount, listKey);
       setListId(uniqueId);
       isInitialized.current = true;
     }

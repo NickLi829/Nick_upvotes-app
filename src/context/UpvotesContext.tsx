@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 // Define types
 interface UpvoteList {
@@ -10,7 +10,7 @@ interface UpvotesContextType {
   lists: UpvoteList[];
   toggleUpvote: (listId: string, upvoteIndex: number) => void;
   addUpvoteToList: (listId: string) => void;
-  createList: (initialUpvotesCount: number) => string;
+  createList: (initialUpvotesCount: number, listKey: string) => string;
 }
 
 // Create context
@@ -29,20 +29,19 @@ export const UpvotesProvider: React.FC<UpvotesProviderProps> = ({ children }) =>
     // Load from localStorage on initial render
     try {
       const savedState = localStorage.getItem(STORAGE_KEY);
+      console.log(savedState)
       return savedState ? JSON.parse(savedState) : [];
     } catch (error) {
       console.error('Error loading from localStorage:', error);
       return [];
     }
   });
-  
-  // Counter to ensure unique IDs even with rapid creation
-  const idCounter = useRef(0);
 
   // Save to localStorage whenever state changes
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(lists));
+      // localStorage.removeItem(STORAGE_KEY);
     } catch (error) {
       console.error('Error saving to localStorage:', error);
     }
@@ -88,10 +87,14 @@ export const UpvotesProvider: React.FC<UpvotesProviderProps> = ({ children }) =>
   };
 
   // Create a new list with initial upvotes
-  const createList = (initialUpvotesCount: number): string => {
-    const timestamp = Date.now();
-    const uniqueCounter = idCounter.current++;
-    const newListId = `list-${timestamp}-${uniqueCounter}`;
+  const createList = (initialUpvotesCount: number, listKey: string): string => {
+    const existingList = lists.find(list => list.id === listKey);
+    if (existingList) {
+      console.log("loading from local storage.");
+      return existingList.id;
+    }
+
+    const newListId = listKey;
     
     console.log(`Creating new list with ID ${newListId} and ${initialUpvotesCount} upvotes`);
     
