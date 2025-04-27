@@ -41,6 +41,40 @@ http://localhost:5173
 - If you encounter any issues during installation or running, please ensure your Node.js version is compatible.
 - No additional environment variables are required to run the project.
 
+### Special Note for GitHub Codespace Users
+
+If you encounter the following error when starting the dev server:
+
+```
+TypeError: crypto$2.getRandomValues is not a function
+```
+
+This is due to the default Node.js version in Codespaces being too low. Please follow these steps to resolve:
+
+1. Open the terminal in Codespace.
+2. Install `nvm` (Node Version Manager) if it is not already installed:
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc
+```
+
+3. Install and use a higher version of Node.js (e.g., version 20):
+
+```bash
+nvm install 20
+nvm use 20
+```
+
+4. Reinstall dependencies and restart the dev server:
+
+```bash
+npm install
+npm run dev
+```
+
+This should fix the issue and allow the project to run properly in GitHub Codespaces.
+
 ## License
 
 This project is licensed under the MIT License.
